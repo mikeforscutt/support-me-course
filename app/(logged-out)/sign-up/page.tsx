@@ -30,6 +30,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 const formSchema = z
   .object({
@@ -175,7 +176,11 @@ export default function SignupPage() {
                             variant='outline'
                             className='normal-case flex justify-between pr-1'
                           >
-                            <span>Pick a date</span>
+                            {field.value ? (
+                              format(new Date(field.value), "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
                             <CalendarIcon />
                           </Button>
                         </FormControl>
@@ -192,6 +197,7 @@ export default function SignupPage() {
                           weekStartsOn={1}
                           fromDate={new Date("1900-01-01")}
                           toDate={new Date()}
+                          captionLayout='dropdown-buttons'
                         />
                       </PopoverContent>
                     </Popover>
