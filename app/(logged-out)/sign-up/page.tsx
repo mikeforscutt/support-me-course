@@ -47,6 +47,16 @@ const formSchema = z
       );
       return dob <= eighteenYearsAgo;
     }, "You must be 18 or older to sign up"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .refine((password) => {
+        return (
+          /[A-Z]/.test(password) &&
+          /[a-z]/.test(password) &&
+          /[0-9]/.test(password)
+        );
+      }, "Password must contain at least one uppercase letter, one lowercase letter, and one number"),
   })
   .superRefine((data, ctx) => {
     if (data.accountType === "company" && !data.companyName) {
@@ -201,6 +211,23 @@ export default function SignupPage() {
                         />
                       </PopoverContent>
                     </Popover>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='********'
+                        type='password'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
