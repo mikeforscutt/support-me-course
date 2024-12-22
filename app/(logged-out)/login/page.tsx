@@ -10,10 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
-
-const handleSubmit = () => {
-  console.log("login validation passed");
-};
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -21,6 +18,7 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,6 +27,10 @@ export default function LoginPage() {
     },
   });
 
+  const handleSubmit = (data: z.infer<typeof formSchema>) => {
+    console.log("login validation passed");
+    router.push("/dashboard");
+  };
   return (
     <>
       <PersonStandingIcon size={50} />
