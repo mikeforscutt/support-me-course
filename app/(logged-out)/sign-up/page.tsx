@@ -31,32 +31,13 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { PasswordInput } from "@/components/ui/password-input";
 
-const formSchema = z
+const accountTypeSchema = z
   .object({
-    email: z.string().email(),
     accountType: z.enum(["personal", "company"]),
     companyName: z.string().optional(),
     numberOfEmployees: z.coerce.number().optional(),
-    dob: z.date().refine((dob) => {
-      const today = new Date();
-      const eighteenYearsAgo = new Date(
-        today.getFullYear() - 18,
-        today.getMonth(),
-        today.getDate()
-      );
-      return dob <= eighteenYearsAgo;
-    }, "You must be 18 or older to sign up"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .refine((password) => {
-        return (
-          /[A-Z]/.test(password) &&
-          /[a-z]/.test(password) &&
-          /[0-9]/.test(password)
-        );
-      }, "Password must contain at least one uppercase letter, one lowercase letter, and one number"),
   })
   .superRefine((data, ctx) => {
     if (data.accountType === "company" && !data.companyName) {
@@ -77,6 +58,41 @@ const formSchema = z
       });
     }
   });
+
+const passwordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .refine((password) => {
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(password);
+      }, "Password must contain at least one uppercase letter, one lowercase letter, and one number"),
+    passwordConfirm: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.passwordConfirm) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["passwordConfirm"],
+        message: "Passwords do not match",
+      });
+    }
+  });
+
+const baseSchema = z.object({
+  email: z.string().email(),
+  dob: z.date().refine((dob) => {
+    const today = new Date();
+    const eighteenYearsAgo = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
+    return dob <= eighteenYearsAgo;
+  }, "You must be 18 or older to sign up"),
+});
+
+const formSchema = baseSchema.and(accountTypeSchema).and(passwordSchema);
 
 export default function SignupPage() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -221,11 +237,20 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='********'
-                        type='password'
-                        {...field}
-                      />
+                      <PasswordInput placeholder='********' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='passwordConfirm'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput placeholder='********' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
