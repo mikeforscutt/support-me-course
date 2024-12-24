@@ -26,6 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import TeamDistrubutionCharts from "./team-distrubution-charts";
+import SupportTicketsResolved from "./support-tickets-resolved";
 
 const teamLeaders = [
   {
@@ -130,20 +131,21 @@ export default function TeamsStats() {
               <PieChartIcon className='text-pink-500' />
             </CardTitle>
           </CardHeader>
-          <CardContent className='flex gap-1 items-center'>
+          <CardContent className='pb-0'>
             <TeamDistrubutionCharts />
           </CardContent>
-          <CardFooter className='flex gap-2 items-center text-muted-foreground mt-auto'></CardFooter>
         </Card>
       </div>
       <Card className='my-4'>
         <CardHeader>
           <CardTitle className='text-lg flex gap-2 items-center'>
-            <ListChecksIcon className='text-pink-500' />
+            <ListChecksIcon />
             <span>Support tickets resolved</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className='pl-0'>line graph</CardContent>
+        <CardContent className='pl-0'>
+          <SupportTicketsResolved />
+        </CardContent>
       </Card>
     </>
   );
