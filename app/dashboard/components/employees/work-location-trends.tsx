@@ -78,19 +78,34 @@ export default function WorkLocationTrends() {
     <ResponsiveContainer width='100%' height={350}>
       <BarChart
         data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
+        className='[&_.recharts-tooltip-cursor]:fill-zinc-200 dark:[&_.recharts-tooltip-cursor]:fill-zinc-800'
       >
-        <XAxis dataKey='name' stroke='#888888' font />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey='office' fill='#ec4899' />
-        <Bar dataKey='wfh' fill='#6b7280' />
+        <XAxis dataKey='name' stroke='#888888' fontSize={12} />
+        <YAxis stroke='#888888' fontSize={12} />
+        <Tooltip
+          separator=': '
+          formatter={(value, name) => {
+            if (name === "wfh") {
+              return [value, "Work from home"];
+            } else if (name === "office") {
+              return [value, "Work from office"];
+            }
+          }}
+          labelClassName='font-bold'
+          wrapperClassName='!text-sm dark:!bg-black rounded-md dark:!border-border'
+        />
+        <Legend
+          iconType='circle'
+          formatter={(value) => {
+            if (value === "wfh") {
+              return <div className='text-sm'>Work from Home</div>;
+            } else if (value === "office") {
+              return <div className='text-sm'>Work from Office</div>;
+            }
+          }}
+        />
+        <Bar dataKey='office' stackId={1} fill='#ec4899' />
+        <Bar dataKey='wfh' stackId={1} fill='#6b7280' radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

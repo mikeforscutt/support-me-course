@@ -100,7 +100,7 @@ export default function EmployeesStats() {
             <span>Check out our new dashboard</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className='pl-0'>
           <WorkLocationTrends />
         </CardContent>
       </Card>
