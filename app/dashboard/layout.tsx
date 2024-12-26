@@ -13,7 +13,7 @@ export default function DashboardLayout({
   const isDesktop = useMediaQuery("(min-width: 760px)");
 
   return (
-    <div className='grid md:grid-cols-[250px_1fr] h-screen'>
+    <div className='md:grid md:grid-cols-[250px_1fr] h-screen'>
       {/* Desktop menu */}
       <MainMenu className='hidden md:flex' />
 
