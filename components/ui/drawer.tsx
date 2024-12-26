@@ -8,16 +8,19 @@ import { cn } from "@/lib/utils"
 // Define the context type
 type DrawerContextType = {
   direction?: "top" | "right" | "bottom" | "left";
+  onClose?: () => void;
 };
 
 // Create the context with a default value
-const DrawerContext = React.createContext<DrawerContextType>({});
+export const DrawerContext = React.createContext<DrawerContextType>({});
 
 const Drawer = ({
   shouldScaleBackground = true,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerContext.Provider value={{ direction: props.direction }}>
+  <DrawerContext.Provider
+    value={{ direction: props.direction, onClose: props.onClose }}
+  >
     <DrawerPrimitive.Root
       shouldScaleBackground={shouldScaleBackground}
       {...props}
